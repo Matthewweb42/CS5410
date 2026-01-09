@@ -4,12 +4,12 @@ using System;
 public partial class Player : Area2D
 {
 	// Sword movement and physics constants
-	private const float FlapStrength = 200.0f;  // TODO: Set this to the upward velocity when clicking
-	private const float Gravity = 500.0f;  // TODO: Set this to the downward acceleration
-	private const float MaxFallSpeed = 300.0f;  // TODO: Set this to prevent falling too fast
-	private const float MaxRotation = 0.75f;  // TODO: Set max rotation angle in radians (45 degrees)
-	private const float MinRotation = -0.75f;  // TODO: Set min rotation angle in radians (-45 degrees)
-	private const float RotationSpeed = 5.0f;  // TODO: Set how fast the sword rotates
+	private const float FlapStrength = -350.0f;  // Negative = upward velocity when clicking
+	private const float Gravity = 800.0f;  // Downward acceleration (pulls sword down)
+	private const float MaxFallSpeed = 500.0f;  // Prevent falling too fast
+	private const float MaxRotation = 0.75f;  // Max rotation angle in radians (45 degrees)
+	private const float MinRotation = -0.75f;  // Min rotation angle in radians (-45 degrees)
+	private const float RotationSpeed = 5.0f;  // How fast the sword rotates
 	
 	// Player state
 	private float _velocityY = 0.0f;

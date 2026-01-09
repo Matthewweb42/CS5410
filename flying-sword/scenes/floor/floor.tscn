@@ -1,21 +1,29 @@
-[gd_scene load_steps=4 format=3 uid="uid://40cngf38c3jv"]
+[gd_scene load_steps=6 format=4 uid="uid://40cngf38c3jv"]
 
 [ext_resource type="Script" uid="uid://kym38non81h1" path="res://scripts/Floor.cs" id="1_floor"]
 [ext_resource type="Texture2D" uid="uid://b1begkl4yn6ey" path="res://assets/sprites/TileStyle2.png" id="2_n0mj7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1w6he"]
-size = Vector2(52, 61)
+size = Vector2(798, 18)
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n0mj7"]
+resource_name = "Ground"
+texture = ExtResource("2_n0mj7")
+13:5/0 = 0
+14:5/0 = 0
+16:5/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_1w6he"]
+sources/0 = SubResource("TileSetAtlasSource_n0mj7")
 
 [node name="Floor" type="StaticBody2D"]
 script = ExtResource("1_floor")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-position = Vector2(-0.25, 0.5)
-scale = Vector2(0.9893617, 0.9791667)
-texture = ExtResource("2_n0mj7")
-region_enabled = true
-region_rect = Rect2(277.1595, 16.7742, 52.565796, 62.02491)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 0.5)
+position = Vector2(-47, 8)
 shape = SubResource("RectangleShape2D_1w6he")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="."]
+texture_repeat = 2
+tile_map_data = PackedByteArray("AAD//wAAAAAOAAUAAAD+/wAAAAAOAAUAAAD9/wAAAAAOAAUAAAD8/wAAAAAOAAUAAAD7/wAAAAAOAAUAAAD6/wAAAAAOAAUAAAD5/wAAAAAOAAUAAAD4/wAAAAAOAAUAAAD3/wAAAAAOAAUAAAAAAAAAAAAOAAUAAAABAAAAAAAOAAUAAAACAAAAAAAOAAUAAAADAAAAAAAOAAUAAAAEAAAAAAAOAAUAAAAFAAAAAAAOAAUAAAAGAAAAAAAOAAUAAAAHAAAAAAAOAAUAAAAIAAAAAAAOAAUAAAAJAAAAAAAOAAUAAAAKAAAAAAAOAAUAAAALAAAAAAAOAAUAAAAMAAAAAAAOAAUAAAANAAAAAAAOAAUAAAAOAAAAAAAOAAUAAAAPAAAAAAAOAAUAAAAQAAAAAAAOAAUAAAARAAAAAAAOAAUAAAASAAAAAAAOAAUAAAATAAAAAAAOAAUAAAD2/wAAAAAOAAUAAAD1/wAAAAAOAAUAAAD0/wAAAAAOAAUAAADz/wAAAAAOAAUAAADy/wAAAAAOAAUAAADx/wAAAAAOAAUAAADw/wAAAAAOAAUAAADv/wAAAAAOAAUAAADu/wAAAAAOAAUAAADt/wAAAAAOAAUAAADs/wAAAAAOAAUAAADr/wAAAAAOAAUAAADq/wAAAAAOAAUAAADp/wAAAAAOAAUAAADo/wAAAAAOAAUAAADn/wAAAAAOAAUAAADm/wAAAAAOAAUAAADl/wAAAAAOAAUAAADk/wAAAAAOAAUAAAAUAAAAAAAOAAUAAAAVAAAAAAAOAAUAAAA=")
+tile_set = SubResource("TileSet_1w6he")

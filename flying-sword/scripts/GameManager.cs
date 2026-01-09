@@ -13,9 +13,9 @@ public partial class GameManager : Node
 	private int _highScore = 0;
 	
 	// Mountain spawning
-	private PackedScene _mountainScene;  // TODO: Load in _Ready() using GD.Load<PackedScene>()
-	private const float SpawnInterval = 0.0f;  // TODO: Set time between mountain spawns in seconds
-	private const float SpawnXPosition = 0.0f;  // TODO: Set x position where mountains spawn (off right edge)
+	private PackedScene _mountainScene;
+	private const float SpawnInterval = 2.0f;  // Time between mountain spawns
+	private const float SpawnXPosition = 650.0f;  // Spawn off right edge of 576px screen
 	
 	// References to game objects
 	private Player _player;
@@ -36,141 +36,230 @@ public partial class GameManager : Node
 	
 	public override void _Ready()
 	{
-		// TODO: Initialize game manager
-		// - Load _mountainScene using GD.Load<PackedScene>("res://scenes/mountain/mountain.tscn")
-		// - Load high score using LoadHighScore()
-		// - Get references to child nodes using GetNode<T>()
-		// - Connect player signals: _player.PlayerDied += OnPlayerDied
-		// - Connect player signals: _player.PlayerScored += OnPlayerScored
-		// - Connect spawn timer: _spawnTimer.Timeout += OnSpawnTimerTimeout
-		// - Set up spawn timer wait_time to SpawnInterval
-		// - Start in Start state
-		// - Show start screen, hide other UI
+		// Load mountain scene for spawning
+		_mountainScene = GD.Load<PackedScene>("res://scenes/mountain/mountain.tscn");
+		
+		// Get references to child nodes
+		_player = GetNode<Player>("Player");
+		_floor = GetNode<Floor>("Floor");
+		_startScreen = GetNode<StartScreen>("StartScreen");
+		_gameOverScreen = GetNode<GameOverScreen>("GameOverScreen");
+		_hud = GetNode<HUD>("HUD");
+		_spawnTimer = GetNode<Timer>("SpawnTimer");
+		_scoreSound = GetNode<AudioStreamPlayer2D>("ScoreSound");
+		_deathSound = GetNode<AudioStreamPlayer2D>("DeathSound");
+		
+		// Connect player signals
+		_player.PlayerDied += OnPlayerDied;
+		_player.PlayerScored += OnPlayerScored;
+		
+		// Connect spawn timer
+		_spawnTimer.Timeout += OnSpawnTimerTimeout;
+		_spawnTimer.WaitTime = SpawnInterval;
+		
+		// Load high score
+		LoadHighScore();
+		
+		// Start in Start state - show start screen, hide others
+		_startScreen.Visible = true;
+		_gameOverScreen.Visible = false;
+		_hud.Visible = false;
+		
+		GD.Print("GameManager initialized!");
 	}
 	
 	
 	public override void _Input(InputEvent @event)
 	{
-		// TODO: Handle input based on game state
-		// - Check if event is InputEventMouseButton and Pressed property is true
-		// - Use switch statement on _currentState:
-		//   - GameState.Start: call StartGame()
-		//   - GameState.GameOver: call RestartGame()
-		//   - GameState.Playing: input is handled by player
+		// Handle click/tap based on game state
+		if (@event is InputEventMouseButton mouseEvent && mouseEvent.Pressed)
+		{
+			switch (_currentState)
+			{
+				case GameState.Start:
+					StartGame();
+					break;
+				case GameState.GameOver:
+					RestartGame();
+					break;
+				case GameState.Playing:
+					// Input handled by player
+					break;
+			}
+		}
 	}
 	
 	
 	private void StartGame()
 	{
-		// TODO: Transition from Start to Playing
-		// - Set _currentState to GameState.Playing
-		// - Reset _currentScore to 0
-		// - Call _player.Reset()
-		// - Set player._isAlive to true (you may need to make this public or use a method)
-		// - Start spawning mountains using _spawnTimer.Start()
-		// - Start floor scrolling using _floor.StartScrolling()
-		// - Hide start screen using _startScreen.HideScreen()
-		// - Show and update HUD
+		GD.Print("Starting game!");
+		
+		// Transition to Playing state
+		_currentState = GameState.Playing;
+		_currentScore = 0;
+		
+		// Reset player
+		_player.Reset();
+		
+		// Start floor scrolling
+		_floor.StartScrolling();
+		
+		// Start spawning mountains
+		_spawnTimer.Start();
+		
+		// Update UI
+		_startScreen.Visible = false;
+		_hud.Visible = true;
+		_hud.UpdateScore(_currentScore);
 	}
 	
 	
 	private void StopGame()
 	{
-		// TODO: Transition from Playing to GameOver
-		// - Set _currentState to GameState.GameOver
-		// - Stop spawning mountains using _spawnTimer.Stop()
-		// - Stop floor scrolling using _floor.StopScrolling()
-		// - Call UpdateHighScore()
-		// - Call SaveHighScore()
-		// - Hide HUD
-		// - Show game over screen with scores
+		GD.Print("Game over!");
+		
+		// Transition to GameOver state
+		_currentState = GameState.GameOver;
+		
+		// Stop spawning and scrolling
+		_spawnTimer.Stop();
+		_floor.StopScrolling();
+		
+		// Update high score
+		UpdateHighScore();
+		SaveHighScore();
+		
+		// Update UI
+		_hud.Visible = false;
+		_gameOverScreen.Visible = true;
+		_gameOverScreen.ShowScreen(_currentScore, _highScore);
 	}
 	
 	
 	private void RestartGame()
 	{
-		// TODO: Reset everything and return to Start state
-		// - Call CleanupMountains() to remove all mountains
-		// - Call _player.Reset()
-		// - Call _floor.Reset()
-		// - Set _currentState to GameState.Start
-		// - Hide game over screen
-		// - Show start screen
+		GD.Print("Restarting game!");
+		
+		// Clean up mountains
+		CleanupMountains();
+		
+		// Reset player and floor
+		_player.Reset();
+		_floor.Reset();
+		
+		// Return to Start state
+		_currentState = GameState.Start;
+		
+		// Update UI
+		_gameOverScreen.Visible = false;
+		_startScreen.Visible = true;
+		_hud.Visible = false;
 	}
 	
 	
 	private void SpawnMountain()
 	{
-		// TODO: Create and spawn a new mountain
-		// - Instantiate _mountainScene using _mountainScene.Instantiate<Mountain>()
-		// - Set random y position for gap using GD.RandfRange(min, max)
-		// - Set x position to SpawnXPosition
-		// - Set mountain.Position = new Vector2(x, y)
-		// - Add to scene tree using AddChild(mountain)
+		if (_mountainScene == null)
+		{
+			GD.PrintErr("Mountain scene not loaded!");
+			return;
+		}
+		
+		// Instantiate mountain
+		var mountain = _mountainScene.Instantiate<Node2D>();
+		
+		// Set random Y position for the gap (between 200 and 700)
+		float randomY = (float)GD.RandRange(250, 650);
+		mountain.Position = new Vector2(SpawnXPosition, randomY);
+		
+		// Add to scene
+		AddChild(mountain);
+		
+		GD.Print($"Spawned mountain at Y: {randomY}");
 	}
 	
 	
 	private void CleanupMountains()
 	{
-		// TODO: Remove all mountains from scene
-		// - Get all children using GetChildren()
-		// - Loop through children
-		// - Check if child is Mountain type using "is Mountain"
-		// - Call QueueFree() on each mountain
-		// - Important for preventing memory leaks!
+		// Remove all mountain children
+		foreach (Node child in GetChildren())
+		{
+			if (child.Name.ToString().Contains("Mountain") || child is Mountain)
+			{
+				child.QueueFree();
+			}
+		}
+		GD.Print("Mountains cleaned up");
 	}
 	
 	
 	private void OnSpawnTimerTimeout()
 	{
-		// TODO: Called when spawn timer triggers
-		// - If _currentState == GameState.Playing, call SpawnMountain()
+		if (_currentState == GameState.Playing)
+		{
+			SpawnMountain();
+		}
 	}
 	
 	
 	private void OnPlayerScored()
 	{
-		// TODO: Handle player scoring a point
-		// - Increment _currentScore
-		// - Play score sound using _scoreSound.Play()
-		// - Update HUD with new score using _hud.UpdateScore(_currentScore)
+		_currentScore++;
+		
+		if (_scoreSound.Stream != null)
+		{
+			_scoreSound.Play();
+		}
+		
+		_hud.UpdateScore(_currentScore);
+		GD.Print($"Score: {_currentScore}");
 	}
 	
 	
 	private void OnPlayerDied()
 	{
-		// TODO: Handle player death
-		// - Play death sound using _deathSound.Play()
-		// - Call StopGame()
+		if (_deathSound.Stream != null)
+		{
+			_deathSound.Play();
+		}
+		
+		StopGame();
 	}
 	
 	
 	private void LoadHighScore()
 	{
-		// TODO: Load high score from save file
-		// - Use FileAccess.FileExists() to check if save file exists
-		// - If exists, use FileAccess.Open() with FileAccess.ModeFlags.Read
-		// - Read high score using file.GetVar().AsInt32()
-		// - Close file using file.Close() or Dispose()
-		// - If file doesn't exist, set _highScore = 0
-		// - Save path: "user://highscore.save"
+		string savePath = "user://highscore.save";
+		
+		if (FileAccess.FileExists(savePath))
+		{
+			using var file = FileAccess.Open(savePath, FileAccess.ModeFlags.Read);
+			_highScore = (int)file.Get32();
+			GD.Print($"Loaded high score: {_highScore}");
+		}
+		else
+		{
+			_highScore = 0;
+		}
 	}
 	
 	
 	private void SaveHighScore()
 	{
-		// TODO: Save high score to file
-		// - Open file using FileAccess.Open() with FileAccess.ModeFlags.Write
-		// - Write _highScore using file.StoreVar(_highScore)
-		// - Close file
-		// - Save path: "user://highscore.save"
+		string savePath = "user://highscore.save";
+		
+		using var file = FileAccess.Open(savePath, FileAccess.ModeFlags.Write);
+		file.Store32((uint)_highScore);
+		GD.Print($"Saved high score: {_highScore}");
 	}
 	
 	
 	private void UpdateHighScore()
 	{
-		// TODO: Check and update high score
-		// - If _currentScore > _highScore:
-		//   - Set _highScore = _currentScore
+		if (_currentScore > _highScore)
+		{
+			_highScore = _currentScore;
+			GD.Print($"New high score: {_highScore}");
+		}
 	}
 }

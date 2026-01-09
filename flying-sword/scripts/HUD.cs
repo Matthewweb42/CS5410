@@ -8,30 +8,26 @@ public partial class HUD : CanvasLayer
 	
 	public override void _Ready()
 	{
-		// TODO: Initialize HUD
-		// - Get reference to score label using GetNode<Label>()
-		// - Set up label font/size (optional)
-		// - Set initial score to "0"
+		_scoreLabel = GetNodeOrNull<Label>("ScoreLabel");
+		GD.Print("HUD ready!");
 	}
 	
 	
 	public void UpdateScore(int score)
 	{
-		// TODO: Update score display
-		// - Set _scoreLabel.Text to score.ToString()
+		if (_scoreLabel != null)
+			_scoreLabel.Text = score.ToString();
 	}
 	
 	
 	public void ShowHud()
 	{
-		// TODO: Show HUD during gameplay
-		// - Set Visible = true
+		Visible = true;
 	}
 	
 	
 	public void HideHud()
 	{
-		// TODO: Hide HUD when not playing
-		// - Set Visible = false
+		Visible = false;
 	}
 }

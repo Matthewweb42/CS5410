@@ -1,11 +1,11 @@
-[gd_scene load_steps=7 format=3 uid="uid://main_scene"]
+[gd_scene load_steps=7 format=3 uid="uid://b1q3sd3tmqngr"]
 
-[ext_resource type="Script" path="res://scripts/GameManager.cs" id="1_game_manager"]
-[ext_resource type="PackedScene" uid="uid://player_scene" path="res://scenes/player/player.tscn" id="2_player"]
-[ext_resource type="PackedScene" uid="uid://floor_scene" path="res://scenes/floor/floor.tscn" id="3_floor"]
-[ext_resource type="PackedScene" uid="uid://start_screen" path="res://scenes/ui/start_screen.tscn" id="4_start"]
-[ext_resource type="PackedScene" uid="uid://game_over_screen" path="res://scenes/ui/game_over_screen.tscn" id="5_gameover"]
-[ext_resource type="PackedScene" uid="uid://hud_scene" path="res://scenes/ui/hud.tscn" id="6_hud"]
+[ext_resource type="Script" uid="uid://yy5mky0ltmmv" path="res://scripts/GameManager.cs" id="1_game_manager"]
+[ext_resource type="PackedScene" uid="uid://kl74o2crgexg" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" uid="uid://40cngf38c3jv" path="res://scenes/floor/floor.tscn" id="3_floor"]
+[ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="4_start"]
+[ext_resource type="PackedScene" path="res://scenes/ui/game_over_screen.tscn" id="5_gameover"]
+[ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_game_manager")
@@ -29,7 +29,6 @@ position = Vector2(288, 512)
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 2.0
-autostart = false
 
 [node name="ScoreSound" type="AudioStreamPlayer2D" parent="."]
 
