@@ -1,0 +1,22 @@
+[gd_scene load_steps=2 format=3 uid="uid://mountain_scene"]
+
+[ext_resource type="Script" path="res://scripts/Mountain.cs" id="1_mountain"]
+
+[node name="Mountain" type="Node2D"]
+script = ExtResource("1_mountain")
+
+[node name="TopMountain" type="Area2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="TopMountain"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopMountain"]
+
+[node name="BottomMountain" type="Area2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="BottomMountain"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomMountain"]
+
+[node name="ScoreZone" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ScoreZone"]

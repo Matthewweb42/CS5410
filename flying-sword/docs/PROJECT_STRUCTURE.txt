@@ -1,0 +1,99 @@
+================================================================================
+                     FLYING SWORD - PROJECT FILES
+================================================================================
+
+ROOT DIRECTORY:
+================================================================================
+.editorconfig                   - Editor configuration
+.gitattributes                  - Git attributes for version control
+.gitignore                      - Git ignore patterns
+FlyingSword.csproj             - C# project file (auto-generated)
+FlyingSword.sln                - Visual Studio solution file (auto-generated)
+icon.svg                       - Project icon
+icon.svg.import                - Godot import settings for icon
+project.godot                  - Main Godot project configuration
+
+
+DOCUMENTATION (Read These):
+================================================================================
+README.md                      - Main project overview and architecture
+QUICK_START.md                 - Get started in 5 minutes (START HERE!)
+CSHARP_GUIDE.md               - C# syntax reference for Godot
+DATA_FLOW.md                  - How signals and methods connect
+IMPLEMENTATION_ORDER.md       - Step-by-step implementation guide
+ARCHITECTURE.txt              - Visual architecture diagrams
+PROJECT_STRUCTURE.txt         - This file
+
+
+SCRIPTS (Implement These):
+================================================================================
+scripts/
+├── Player.cs                  - Sword physics, input, collision
+├── Mountain.cs                - Obstacle scrolling and scoring
+├── Floor.cs                   - Infinite scrolling ground
+├── GameManager.cs             - Main game logic, states, spawning
+├── StartScreen.cs             - Start menu UI
+├── GameOverScreen.cs          - Game over UI with scores
+└── HUD.cs                     - In-game score display
+
+
+SCENES (Don't Edit Manually - Use Godot Editor):
+================================================================================
+scenes/
+├── main.tscn                  - Root scene with all game objects
+├── player/
+│   └── player.tscn           - Sword player scene
+├── mountain/
+│   └── mountain.tscn         - Mountain obstacle scene (instanced)
+├── floor/
+│   └── floor.tscn            - Scrolling floor scene
+└── ui/
+    ├── start_screen.tscn     - Start screen UI
+    ├── game_over_screen.tscn - Game over screen UI
+    └── hud.tscn              - HUD (score display)
+
+
+ASSETS (Add Your Resources Here):
+================================================================================
+assets/
+├── audio/                     - Place sound effects here
+│                               (flap.wav, score.wav, death.wav, etc.)
+└── sprites/                   - Place images here
+                                (sword.png, mountain.png, floor.png, etc.)
+
+
+GENERATED/IGNORED (Don't Commit):
+================================================================================
+.godot/                        - Godot editor cache (auto-generated)
+bin/                          - Build output (created when you build)
+obj/                          - Build intermediates (created when you build)
+
+
+WORKFLOW:
+================================================================================
+1. Read QUICK_START.md
+2. Open project in Godot 4.5
+3. Build C# solution (Ctrl+Shift+B)
+4. Implement scripts following TODO comments
+5. Add sprites/sounds to assets/ folders
+6. Assign assets in Godot editor
+7. Test and tune!
+
+
+FILE YOU SHOULD MODIFY:
+================================================================================
+✓ All files in scripts/        - Implement the TODO functions
+✓ Files in assets/             - Add your sprites and sounds
+✗ Files in scenes/             - Edit in Godot editor, not text editor
+✗ Generated files              - Let Godot/compiler manage these
+
+
+IMPORTANT NOTES:
+================================================================================
+- Scene files (.tscn) are text but should be edited in Godot
+- Build the project before running (Ctrl+Shift+B)
+- All C# classes must be "public partial class"
+- Node references must be obtained in _Ready() using GetNode<T>()
+- Signals are connected with += operator in C#
+
+================================================================================
