@@ -260,9 +260,9 @@ public partial class Player : Area2D
 
 		// STEP 1: Reset position to starting location
 		// Place the player in the center-left of the screen
-		// X: 100 pixels from left edge (gives player reaction time)
+		// X: 180 pixels from left edge (more centered for better visibility)
 		// Y: 512 pixels (vertical center of 1024-height screen)
-		Position = new Vector2(100.0f, 512.0f);
+		Position = new Vector2(180.0f, 512.0f);
 
 		// STEP 2: Reset physics state
 		// Clear any existing velocity from the previous game

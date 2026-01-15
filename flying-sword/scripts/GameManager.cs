@@ -10,16 +10,19 @@ public partial class GameManager : Node
 	
 	// Score tracking
 	private int _currentScore = 0;
-	private int _highScore = 0;
+	private int _highScore = 5;  // Hardcoded starting high score for testing
 	
 	// Mountain spawning
 	private PackedScene _mountainScene;
-	private const float SpawnInterval = 2.0f;  // Time between mountain spawns
+	private const float SpawnInterval = 3.5f;  // Time between mountain spawns (controls horizontal distance)
 	private const float SpawnXPosition = 650.0f;  // Spawn off right edge of 576px screen
+	private const float MinSpawnY = 500.0f;  // Minimum Y position for gap center
+	private const float MaxSpawnY = 850.0f;  // Maximum Y position for gap center
 	
 	// References to game objects
 	private Player _player;
 	private Floor _floor;
+	private Background _background;
 	
 	// UI references
 	private StartScreen _startScreen;
@@ -42,6 +45,7 @@ public partial class GameManager : Node
 		// Get references to child nodes
 		_player = GetNode<Player>("Player");
 		_floor = GetNode<Floor>("Floor");
+		_background = GetNode<Background>("Background");
 		_startScreen = GetNode<StartScreen>("StartScreen");
 		_gameOverScreen = GetNode<GameOverScreen>("GameOverScreen");
 		_hud = GetNode<HUD>("HUD");
@@ -101,8 +105,9 @@ public partial class GameManager : Node
 		// Reset player
 		_player.Reset();
 		
-		// Start floor scrolling
+		// Start scrolling
 		_floor.StartScrolling();
+		_background.StartScrolling();
 		
 		// Start spawning mountains
 		_spawnTimer.Start();
@@ -124,6 +129,8 @@ public partial class GameManager : Node
 		// Stop spawning and scrolling
 		_spawnTimer.Stop();
 		_floor.StopScrolling();
+		_background.StopScrolling();
+		StopAllMountains();
 		
 		// Update high score
 		UpdateHighScore();
@@ -146,6 +153,7 @@ public partial class GameManager : Node
 		// Reset player and floor
 		_player.Reset();
 		_floor.Reset();
+		_background.Reset();
 		
 		// Return to Start state
 		_currentState = GameState.Start;
@@ -168,8 +176,8 @@ public partial class GameManager : Node
 		// Instantiate mountain
 		var mountain = _mountainScene.Instantiate<Node2D>();
 		
-		// Set random Y position for the gap (between 200 and 700)
-		float randomY = (float)GD.RandRange(250, 650);
+		// Set random Y position for the gap center using configured bounds
+		float randomY = (float)GD.RandRange(MinSpawnY, MaxSpawnY);
 		mountain.Position = new Vector2(SpawnXPosition, randomY);
 		
 		// Add to scene
@@ -190,6 +198,20 @@ public partial class GameManager : Node
 			}
 		}
 		GD.Print("Mountains cleaned up");
+	}
+	
+	
+	private void StopAllMountains()
+	{
+		// Stop scrolling on all active mountains
+		foreach (Node child in GetChildren())
+		{
+			if (child is Mountain mountain)
+			{
+				mountain.StopScrolling();
+			}
+		}
+		GD.Print("All mountains stopped");
 	}
 	
 	

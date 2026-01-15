@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://b1q3sd3tmqngr"]
+[gd_scene load_steps=9 format=3 uid="uid://b1q3sd3tmqngr"]
 
 [ext_resource type="Script" uid="uid://yy5mky0ltmmv" path="res://scripts/GameManager.cs" id="1_game_manager"]
 [ext_resource type="PackedScene" uid="uid://kl74o2crgexg" path="res://scenes/player/player.tscn" id="2_player"]
@@ -6,26 +6,22 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="4_start"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_over_screen.tscn" id="5_gameover"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
+[ext_resource type="Texture2D" uid="uid://41y7pmcjry5n" path="res://assets/sprites/sky1.jpg" id="7_tipki"]
+[ext_resource type="Script" uid="uid://eamapk62hmn0" path="res://scripts/Background.cs" id="8_85g3d"]
 
 [node name="Main" type="Node"]
 script = ExtResource("1_game_manager")
 
-[node name="Background" type="ColorRect" parent="."]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0.53, 0.81, 0.92, 1)
-
 [node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(150, 512)
+position = Vector2(169, 519)
 
 [node name="Floor" parent="." instance=ExtResource("3_floor")]
+z_index = 150
 position = Vector2(288, 950)
 
 [node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(288, 512)
+position = Vector2(292, 706)
+zoom = Vector2(2, 2)
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 2.0
@@ -41,3 +37,10 @@ visible = false
 
 [node name="HUD" parent="." instance=ExtResource("6_hud")]
 visible = false
+
+[node name="Background" type="Sprite2D" parent="."]
+z_index = -10
+position = Vector2(594.9375, 700.3125)
+scale = Vector2(1.8424556, 2.1474717)
+texture = ExtResource("7_tipki")
+script = ExtResource("8_85g3d")

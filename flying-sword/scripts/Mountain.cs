@@ -4,67 +4,103 @@ using System;
 public partial class Mountain : Node2D
 {
 	// Mountain movement constants
-	private const float ScrollSpeed = 0.0f;  // TODO: Set speed at which mountains move left
+	private const float ScrollSpeed = 150.0f;  // Same speed as floor scrolling
 	
 	// Mountain gap and size
-	private const float GapSize = 0.0f;  // TODO: Set vertical gap between top and bottom mountains
-	private const float MinY = 0.0f;  // TODO: Set minimum y position for gap center
-	private const float MaxY = 0.0f;  // TODO: Set maximum y position for gap center
+	private const float GapSize = 200.0f;  // Vertical gap between top and bottom mountains
+	private const float MinY = 200.0f;  // Minimum y position for gap center
+	private const float MaxY = 500.0f;  // Maximum y position for gap center
 	
 	// References to child nodes
-	private Area2D _topMountain;
-	private Area2D _bottomMountain;
+	private Sprite2D _topMountain;
+	private Sprite2D _bottomMountain;
 	private Area2D _scoreZone;
+	private CollisionShape2D _topCollision;
+	private CollisionShape2D _bottomCollision;
 	
 	// State
 	private bool _hasScored = false;
+	private bool _isScrolling = true;
 	
 	
 	public override void _Ready()
 	{
-		// TODO: Initialize the mountain pair
-		// - Get references to child nodes using GetNode<Area2D>()
-		// - Set random y position for the gap
-		// - Call SetGapPosition() with random y position
-		// - Set up collision layers/masks
-		// - Connect ScoreZone AreaEntered signal to OnScoreZoneAreaEntered
+		// Get references to child nodes
+		_topMountain = GetNode<Sprite2D>("TopMountain");
+		_bottomMountain = GetNode<Sprite2D>("BottomMountain");
+		_scoreZone = GetNode<Area2D>("ScoreZone");
+		_topCollision = GetNode<CollisionShape2D>("TopMountain/CollisionShape2D");
+		_bottomCollision = GetNode<CollisionShape2D>("BottomMountain/CollisionShape2D");
+		
+		// Note: Position is set by GameManager when spawning
+		// The Y position passed to this mountain will be the center of the gap
+		SetGapPosition(Position.Y);
+		
+		// Connect ScoreZone signal
+		_scoreZone.AreaEntered += OnScoreZoneAreaEntered;
+		
+		GD.Print($"Mountain initialized at position {Position}");
 	}
 	
 	
 	public override void _Process(double delta)
 	{
-		// TODO: Move mountain to the left
-		// - Update Position.X based on ScrollSpeed and delta (cast delta to float)
-		// - Create new Vector2 for position: Position = new Vector2(x, Position.Y)
-		// - Check if mountain is off screen using IsOffScreen()
-		// - If off screen, call QueueFree() to remove from memory
+		// Move mountain to the left if scrolling is active
+		if (_isScrolling)
+		{
+			Position = new Vector2(Position.X - ScrollSpeed * (float)delta, Position.Y);
+			
+			// Remove from memory when off screen
+			if (IsOffScreen())
+			{
+				GD.Print("Mountain off screen, removing...");
+				QueueFree();
+			}
+		}
 	}
 	
 	
-	private void SetGapPosition(float yPos)
+	private void SetGapPosition(float gapCenterY)
 	{
-		// TODO: Position the mountains with gap at yPos
-		// - Set top mountain position (above yPos)
-		// - Set bottom mountain position (below yPos)
-		// - Set score zone position (at yPos)
-		// - Use _topMountain.Position = new Vector2(x, y)
+		// Position top mountain above the gap
+		_topMountain.Position = new Vector2(0, -GapSize / 2 - _topMountain.Texture.GetHeight() / 2);
+		
+		// Position bottom mountain below the gap
+		_bottomMountain.Position = new Vector2(0, GapSize / 2 + _bottomMountain.Texture.GetHeight() / 2);
+		
+		// Position score zone in the middle of the gap
+		_scoreZone.Position = new Vector2(0, 0);
 	}
 	
 	
 	private bool IsOffScreen()
 	{
-		// TODO: Check if mountain has moved past left edge of screen
-		// - Return true if Position.X is less than a threshold (e.g., -100)
-		// - This helps with cleanup
-		return false;
+		// Check if mountain has moved past left edge of screen
+		// Using -100 to give some buffer before cleanup
+		return Position.X < -100;
+	}
+	
+	
+	public void StopScrolling()
+	{
+		_isScrolling = false;
+	}
+	
+	
+	public void StartScrolling()
+	{
+		_isScrolling = true;
 	}
 	
 	
 	private void OnScoreZoneAreaEntered(Area2D area)
 	{
-		// TODO: Handle player entering score zone
-		// - Check if it's the player using area.GetParent().Name
-		// - If not already scored (_hasScored == false), set _hasScored = true
-		// - Player will emit their own PlayerScored signal when they detect the score zone
+		// Check if the player entered the score zone
+		if (!_hasScored && area.GetParent() is Player)
+		{
+			_hasScored = true;
+			GD.Print("Player passed through mountain gap!");
+			// Player will handle emitting the PlayerScored signal
+		}
 	}
 }
