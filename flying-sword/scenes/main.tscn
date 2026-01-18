@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="4_start"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_over_screen.tscn" id="5_gameover"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
-[ext_resource type="Texture2D" uid="uid://41y7pmcjry5n" path="res://assets/sprites/sky1.jpg" id="7_tipki"]
+[ext_resource type="Texture2D" uid="uid://8x1g1nlpg5rj" path="res://assets/sprites/Background5.png" id="7_tipki"]
 [ext_resource type="Script" uid="uid://eamapk62hmn0" path="res://scripts/Background.cs" id="8_85g3d"]
 
 [node name="Main" type="Node"]
@@ -40,7 +40,8 @@ visible = false
 
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -10
-position = Vector2(594.9375, 700.3125)
+texture_repeat = 2
+position = Vector2(363, 697)
 scale = Vector2(1.8424556, 2.1474717)
 texture = ExtResource("7_tipki")
 script = ExtResource("8_85g3d")
