@@ -12,12 +12,12 @@ public partial class GameManager : Node
 	private int _currentScore = 0;
 	private int _highScore = 5;  // Hardcoded starting high score for testing
 	
-	// Mountain spawning
-	private PackedScene _mountainScene;
-	private const float SpawnInterval = 3.5f;  // Time between mountain spawns (controls horizontal distance)
-	private const float SpawnXPosition = 650.0f;  // Spawn off right edge of 576px screen
-	private const float MinSpawnY = 500.0f;  // Minimum Y position for gap center
-	private const float MaxSpawnY = 850.0f;  // Maximum Y position for gap center
+	// Pipe spawning
+	private PackedScene _pipeScene;
+	private const float SpawnInterval = 2.5f;  // Time between pipe spawns
+	private const float SpawnXPosition = 650.0f;  // Spawn off right edge (screen is 576px wide)
+	private const float MinSpawnY = 300.0f;  // Minimum Y for gap center
+	private const float MaxSpawnY = 700.0f;  // Maximum Y for gap center (screen is 1024px tall)
 	
 	// References to game objects
 	private Player _player;
@@ -39,8 +39,8 @@ public partial class GameManager : Node
 	
 	public override void _Ready()
 	{
-		// Load mountain scene for spawning
-		_mountainScene = GD.Load<PackedScene>("res://scenes/mountain/mountain.tscn");
+		// Load pipe scene for spawning
+		_pipeScene = GD.Load<PackedScene>("res://scenes/pipe/pipe.tscn");
 		
 		// Get references to child nodes
 		_player = GetNode<Player>("Player");
@@ -109,7 +109,7 @@ public partial class GameManager : Node
 		_floor.StartScrolling();
 		_background.StartScrolling();
 		
-		// Start spawning mountains
+		// Start spawning pipes
 		_spawnTimer.Start();
 		
 		// Update UI
@@ -130,7 +130,7 @@ public partial class GameManager : Node
 		_spawnTimer.Stop();
 		_floor.StopScrolling();
 		_background.StopScrolling();
-		StopAllMountains();
+		StopAllPipes();
 		
 		// Update high score
 		UpdateHighScore();
@@ -147,8 +147,8 @@ public partial class GameManager : Node
 	{
 		GD.Print("Restarting game!");
 		
-		// Clean up mountains
-		CleanupMountains();
+		// Clean up pipes
+		CleanupPipes();
 		
 		// Reset player and floor
 		_player.Reset();
@@ -165,53 +165,53 @@ public partial class GameManager : Node
 	}
 	
 	
-	private void SpawnMountain()
+	private void SpawnPipe()
 	{
-		if (_mountainScene == null)
+		if (_pipeScene == null)
 		{
-			GD.PrintErr("Mountain scene not loaded!");
+			GD.PrintErr("Pipe scene not loaded!");
 			return;
 		}
 		
-		// Instantiate mountain
-		var mountain = _mountainScene.Instantiate<Node2D>();
+		// Instantiate pipe
+		var pipe = _pipeScene.Instantiate<Node2D>();
 		
 		// Set random Y position for the gap center using configured bounds
 		float randomY = (float)GD.RandRange(MinSpawnY, MaxSpawnY);
-		mountain.Position = new Vector2(SpawnXPosition, randomY);
+		pipe.Position = new Vector2(SpawnXPosition, randomY);
 		
 		// Add to scene
-		AddChild(mountain);
+		AddChild(pipe);
 		
-		GD.Print($"Spawned mountain at Y: {randomY}");
+		GD.Print($"Spawned pipe at Y: {randomY}");
 	}
 	
 	
-	private void CleanupMountains()
+	private void CleanupPipes()
 	{
-		// Remove all mountain children
+		// Remove all pipe children
 		foreach (Node child in GetChildren())
 		{
-			if (child.Name.ToString().Contains("Mountain") || child is Mountain)
+			if (child.Name.ToString().Contains("Pipe") || child is Pipe)
 			{
 				child.QueueFree();
 			}
 		}
-		GD.Print("Mountains cleaned up");
+		GD.Print("Pipes cleaned up");
 	}
 	
 	
-	private void StopAllMountains()
+	private void StopAllPipes()
 	{
-		// Stop scrolling on all active mountains
+		// Stop scrolling on all active pipes
 		foreach (Node child in GetChildren())
 		{
-			if (child is Mountain mountain)
+			if (child is Pipe pipe)
 			{
-				mountain.StopScrolling();
+				pipe.StopScrolling();
 			}
 		}
-		GD.Print("All mountains stopped");
+		GD.Print("All pipes stopped");
 	}
 	
 	
@@ -219,7 +219,7 @@ public partial class GameManager : Node
 	{
 		if (_currentState == GameState.Playing)
 		{
-			SpawnMountain();
+			SpawnPipe();
 		}
 	}
 	

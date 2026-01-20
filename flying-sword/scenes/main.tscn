@@ -13,22 +13,21 @@
 script = ExtResource("1_game_manager")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
-position = Vector2(169, 519)
+position = Vector2(150, 400)
+scale = Vector2(2, 2)
 
 [node name="Floor" parent="." instance=ExtResource("3_floor")]
 z_index = 150
-position = Vector2(288, 950)
-
-[node name="Camera2D" type="Camera2D" parent="."]
-position = Vector2(292, 706)
-zoom = Vector2(2, 2)
+position = Vector2(400, 950)
 
 [node name="SpawnTimer" type="Timer" parent="."]
 wait_time = 2.0
 
 [node name="ScoreSound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(68, -49)
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
+position = Vector2(31, -62)
 
 [node name="StartScreen" parent="." instance=ExtResource("4_start")]
 
@@ -38,10 +37,13 @@ visible = false
 [node name="HUD" parent="." instance=ExtResource("6_hud")]
 visible = false
 
+[node name="GameManager" type="Node" parent="."]
+script = ExtResource("1_game_manager")
+
 [node name="Background" type="Sprite2D" parent="."]
 z_index = -10
 texture_repeat = 2
-position = Vector2(363, 697)
-scale = Vector2(1.8424556, 2.1474717)
+scale = Vector2(2.5, 4.53)
 texture = ExtResource("7_tipki")
+centered = false
 script = ExtResource("8_85g3d")

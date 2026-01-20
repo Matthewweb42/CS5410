@@ -14,6 +14,7 @@ public partial class Player : Area2D
 	// Player state
 	private float _velocityY = 0.0f;
 	private bool _isAlive = true;
+	private Vector2 _startPosition;  // Store initial position from scene
 	
 	// References to child nodes
 	private Sprite2D _sprite;  // Using simple Sprite2D instead of AnimatedSprite2D for now
@@ -30,6 +31,9 @@ public partial class Player : Area2D
 	
 	public override void _Ready()
 	{
+		// Save starting position from scene
+		_startPosition = Position;
+		
 		// STEP 1: Get references to child nodes
 		// GetNode<T>() finds child nodes by their name in the scene tree
 		// The names must match exactly what's in player.tscn
@@ -259,10 +263,8 @@ public partial class Player : Area2D
 		// After game over, this prepares the player for another attempt
 
 		// STEP 1: Reset position to starting location
-		// Place the player in the center-left of the screen
-		// X: 180 pixels from left edge (more centered for better visibility)
-		// Y: 512 pixels (vertical center of 1024-height screen)
-		Position = new Vector2(180.0f, 512.0f);
+		// Use the position set in the scene editor
+		Position = _startPosition;
 
 		// STEP 2: Reset physics state
 		// Clear any existing velocity from the previous game
@@ -295,27 +297,27 @@ public partial class Player : Area2D
 	private void OnAreaEntered(Area2D area)
 	{
 		// OnAreaEntered() is called when the player overlaps with another Area2D
-		// This handles collisions with mountains (death) and score zones (points)
+		// This handles collisions with pipes (death) and score zones (points)
 		// This signal was connected in _Ready() with: AreaEntered += OnAreaEntered
 
 		// STEP 1: Identify what we collided with
 		// We need to check the NAME of the area to determine what it is
-		// In mountain.tscn, we have three Area2D children:
-		//   - "TopMountain" (kills player)
-		//   - "BottomMountain" (kills player)
+		// In pipe.tscn, we have three Area2D children:
+		//   - "TopPipe" (kills player)
+		//   - "BottomPipe" (kills player)
 		//   - "ScoreZone" (gives points)
 
 		// Get the name of the Area2D that was hit
 		string areaName = area.Name;
 
-		// STEP 2: Handle mountain collisions (death)
-		// If the area is named "TopMountain" or "BottomMountain", the player dies
-		if (areaName == "TopMountain" || areaName == "BottomMountain")
+		// STEP 2: Handle pipe collisions (death)
+		// If the area is named "TopPipe" or "BottomPipe", the player dies
+		if (areaName == "TopPipe" || areaName == "BottomPipe")
 		{
 			// Call Die() to handle death sequence
 			Die();
 
-			// Debug: Show which mountain was hit
+			// Debug: Show which pipe was hit
 			GD.Print($"Hit {areaName}!");
 		}
 
