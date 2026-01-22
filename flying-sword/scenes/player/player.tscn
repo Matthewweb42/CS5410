@@ -1,13 +1,15 @@
-[gd_scene load_steps=4 format=3 uid="uid://kl74o2crgexg"]
+[gd_scene load_steps=5 format=3 uid="uid://kl74o2crgexg"]
 
 [ext_resource type="Script" uid="uid://skofd4q8ahhi" path="res://scripts/Player.cs" id="1_player"]
 [ext_resource type="Texture2D" uid="uid://bmwlyktq4hlsd" path="res://assets/sprites/sword_normal.png" id="2_dovo2"]
+[ext_resource type="AudioStream" uid="uid://byknego4qm5sk" path="res://assets/audio/sword-clashhit-393837.mp3" id="3_gmlin"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gmlin"]
-radius = 7.0
-height = 22.0
+radius = 3.0
+height = 36.0
 
 [node name="Player" type="Area2D"]
+collision_mask = 2
 script = ExtResource("1_player")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
@@ -15,6 +17,8 @@ texture = ExtResource("2_dovo2")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(1, 0)
+rotation = 0.7853982
 shape = SubResource("CapsuleShape2D_gmlin")
 
 [node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_gmlin")

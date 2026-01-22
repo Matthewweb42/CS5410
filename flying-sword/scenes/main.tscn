@@ -1,8 +1,9 @@
-[gd_scene load_steps=9 format=3 uid="uid://b1q3sd3tmqngr"]
+[gd_scene load_steps=10 format=3 uid="uid://b1q3sd3tmqngr"]
 
 [ext_resource type="Script" uid="uid://yy5mky0ltmmv" path="res://scripts/GameManager.cs" id="1_game_manager"]
 [ext_resource type="PackedScene" uid="uid://kl74o2crgexg" path="res://scenes/player/player.tscn" id="2_player"]
 [ext_resource type="PackedScene" uid="uid://40cngf38c3jv" path="res://scenes/floor/floor.tscn" id="3_floor"]
+[ext_resource type="AudioStream" uid="uid://btheyj8oxpos2" path="res://assets/audio/pixel-death-66829.mp3" id="4_85g3d"]
 [ext_resource type="PackedScene" path="res://scenes/ui/start_screen.tscn" id="4_start"]
 [ext_resource type="PackedScene" path="res://scenes/ui/game_over_screen.tscn" id="5_gameover"]
 [ext_resource type="PackedScene" path="res://scenes/ui/hud.tscn" id="6_hud"]
@@ -28,6 +29,7 @@ position = Vector2(68, -49)
 
 [node name="DeathSound" type="AudioStreamPlayer2D" parent="."]
 position = Vector2(31, -62)
+stream = ExtResource("4_85g3d")
 
 [node name="StartScreen" parent="." instance=ExtResource("4_start")]
 
