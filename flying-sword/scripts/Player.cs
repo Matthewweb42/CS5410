@@ -4,7 +4,7 @@ using System;
 public partial class Player : Area2D
 {
 	private const float FlapStrength = -350.0f;
-	private const float Gravity = 800.0f;
+	private const float GravityForce = 800.0f;
 	private const float MaxFallSpeed = 500.0f;
 	private const float MaxRotation = 0.75f;
 	private const float MinRotation = -0.75f;
@@ -54,7 +54,7 @@ public partial class Player : Area2D
 		if (!_hasGameStarted)
 			return;
 
-		_velocityY += Gravity * (float)delta;
+		_velocityY += GravityForce * (float)delta;
 		_velocityY = Mathf.Min(_velocityY, MaxFallSpeed);
 
 		var newPosition = Position;
@@ -63,7 +63,7 @@ public partial class Player : Area2D
 
 		UpdateRotation();
 		CheckCeilingCollision();
-		CheckFloorCollisionWhenDead();
+		CheckFloorCollision();
 	}
 	
 	
@@ -101,13 +101,17 @@ public partial class Player : Area2D
 	}
 	
 	
-	private void CheckFloorCollisionWhenDead()
+	private void CheckFloorCollision()
 	{
-		if (_isAlive)
-			return;
-
 		if (Position.Y >= FloorY)
 		{
+			// If player hits the ground while alive, they die
+			if (_isAlive)
+			{
+				Die();
+			}
+			
+			// Clamp position to floor
 			var newPosition = Position;
 			newPosition.Y = FloorY;
 			Position = newPosition;

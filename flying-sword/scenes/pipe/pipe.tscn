@@ -16,8 +16,8 @@ size = Vector2(61, 327.5)
 script = ExtResource("1_rvrno")
 
 [node name="TopPipeSprite" type="Sprite2D" parent="."]
-position = Vector2(0, -400)
-scale = Vector2(8, 8)
+position = Vector2(58.5, -449.5)
+scale = Vector2(4.1, 9.571429)
 texture = ExtResource("2_rvrno")
 region_enabled = true
 region_rect = Rect2(0.8064041, 95.8499, 30.576008, 63.130463)
@@ -30,8 +30,8 @@ position = Vector2(-0.375, 0.25)
 shape = SubResource("RectangleShape2D_w3bcf")
 
 [node name="BottomPipeSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 400)
-scale = Vector2(8, 8)
+position = Vector2(56, 451)
+scale = Vector2(4.387097, 9.619048)
 texture = ExtResource("2_rvrno")
 region_enabled = true
 region_rect = Rect2(0.12985611, 79.96902, 31.12098, 63.9177)

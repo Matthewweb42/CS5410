@@ -10,7 +10,7 @@ public partial class GameManager : Node
 	private int _highScore = 0;
 	
 	private PackedScene _pipeScene;
-	private const float SpawnInterval = 2.5f;
+	private const float SpawnInterval = 3.5f;
 	private const float SpawnXPosition = 650.0f;
 	private const float MinSpawnY = 300.0f;
 	private const float MaxSpawnY = 700.0f;
